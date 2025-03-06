@@ -5,7 +5,7 @@ info:
   version: 1.0.0
 
 servers:
-  - url: "https://prod-91.eastus.logic.azure.com/workflows/92008f2398324758a17d81f1a316ccb3/triggers/manual/paths/invoke"
+  - url: "https://prod-91.eastus.logic.azure.com:443/workflows/92008f2398324758a17d81f1a316ccb3/triggers/When_a_HTTP_request_is_received/paths/invoke"
 
 paths:
   /:
@@ -19,13 +19,13 @@ paths:
           required: true
           schema:
             type: string
-          example: "2023-01-01-preview"
+          example: "2016-10-01"
         - name: sp
           in: query
           required: true
           schema:
             type: string
-          example: "/triggers/manual/run"
+          example: "/triggers/When_a_HTTP_request_is_received/run"
         - name: sv
           in: query
           required: true
