@@ -1,0 +1,78 @@
+openapi: 3.0.1
+info:
+  title: Logic App Email Trigger API
+  description: API to trigger an Azure Logic App for sending anomaly alerts.
+  version: 1.0.0
+
+servers:
+  - url: "https://prod-91.eastus.logic.azure.com/workflows/92008f2398324758a17d81f1a316ccb3/triggers/manual/paths/invoke"
+
+paths:
+  /:
+    post:
+      summary: Trigger Azure Logic App
+      description: Sends an anomaly alert email via Azure Logic App.
+      operationId: sendAnomalyAlert
+      parameters:
+        - name: api-version
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "2023-01-01-preview"
+        - name: sp
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "/triggers/manual/run"
+        - name: sv
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "1.0"
+        - name: sig
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "8atV1mo1WR7VdONdABDPvPoOKT1NRPTaYsAVMVqTSik"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: "gaurav.naithani@kyndryl.com"
+                subject:
+                  type: string
+                  example: "Mainframe Network Logs Anomaly Detected!"
+                message:
+                  type: string
+                  example: |
+                    Time Detected: 2025-02-25T00:00:00Z
+                    Actual Usage: 1.0
+                    Expected Usage: 0
+                    Anomaly Score: 3.5
+                    Source: 192.168.1.1
+      responses:
+        "200":
+          description: Successfully triggered Logic App.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Success"
+        "400":
+          description: Bad request.
+        "401":
+          description: Unauthorized.
+        "500":
+          description: Internal server error.
