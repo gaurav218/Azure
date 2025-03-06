@@ -5,7 +5,7 @@ info:
   version: 1.0.0
 
 servers:
-  - url: "https://prod-91.eastus.logic.azure.com:443/workflows/92008f2398324758a17d81f1a316ccb3/triggers/When_a_HTTP_request_is_received/paths/invoke"
+  - url: "https://prod-91.eastus.logic.azure.com/workflows/92008f2398324758a17d81f1a316ccb3/triggers/When_a_HTTP_request_is_received/paths/invoke"
 
 paths:
   /:
@@ -76,3 +76,12 @@ paths:
           description: Unauthorized.
         "500":
           description: Internal server error.
+      security:
+        - apiKeyAuth: []
+
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: query
+      name: sig
