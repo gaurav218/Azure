@@ -66,11 +66,10 @@ components:
   securitySchemes:
     OAuth2Auth:
       type: oauth2
-      description: Microsoft Graph API authentication.
+      description: Microsoft Graph API authentication using Client Credentials (Service Principal).
       flows:
-        authorizationCode:
-          authorizationUrl: https://login.microsoftonline.com/common/oauth2/v2.0/authorize
-          tokenUrl: https://login.microsoftonline.com/common/oauth2/v2.0/token
+        clientCredentials:
+          tokenUrl: https://login.microsoftonline.com/87e80fbb-80c5-4107-ba56-aafe9d96106c/oauth2/v2.0/token
           scopes:
             SecurityEvents.Read.All: Read security events and secure scores.
 
