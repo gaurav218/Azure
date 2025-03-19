@@ -71,8 +71,8 @@ components:
         clientCredentials:
           tokenUrl: https://login.microsoftonline.com/87e80fbb-80c5-4107-ba56-aafe9d96106c/oauth2/v2.0/token
           scopes:
-            SecurityEvents.Read.All: Read security events and secure scores.
-
+            https://graph.microsoft.com/.default: "Access Microsoft Graph API"
+            
 security:
   - OAuth2Auth:
       - https://graph.microsoft.com/.default
