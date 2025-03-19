@@ -75,4 +75,4 @@ components:
 
 security:
   - OAuth2Auth:
-      - SecurityEvents.Read.All
+      - https://graph.microsoft.com/.default
