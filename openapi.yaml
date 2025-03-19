@@ -1,87 +1,79 @@
 openapi: 3.0.1
 info:
-  title: Logic App Email Trigger API
-  description: API to trigger an Azure Logic App for sending anomaly alerts.
-  version: 1.0.0
+  title: Microsoft Graph API - Secure Scores
+  description: Retrieves the top 5 Microsoft Defender Secure Scores via Microsoft Graph API.
+  version: "1.0.0"
 
 servers:
-  - url: "https://prod-91.eastus.logic.azure.com/workflows/92008f2398324758a17d81f1a316ccb3/triggers/When_a_HTTP_request_is_received/paths/invoke"
+  - url: https://graph.microsoft.com/beta
 
 paths:
-  /:
-    post:
-      summary: Trigger Azure Logic App
-      description: Sends an anomaly alert email via Azure Logic App.
-      operationId: sendAnomalyAlert
+  /security/secureScores:
+    get:
+      summary: Get Microsoft Defender Secure Scores
+      description: Retrieves the top 5 secure scores for security assessment.
+      operationId: getSecureScores
       parameters:
-        - name: api-version
+        - name: $top
           in: query
-          required: true
+          required: false
           schema:
-            type: string
-          example: "2016-10-01"
-        - name: sp
-          in: query
-          required: true
-          schema:
-            type: string
-          example: "/triggers/When_a_HTTP_request_is_received/run"
-        - name: sv
-          in: query
-          required: true
-          schema:
-            type: string
-          example: "1.0"
-        - name: sig
-          in: query
-          required: true
-          schema:
-            type: string
-          example: "8atV1mo1WR7VdONdABDPvPoOKT1NRPTaYsAVMVqTSik"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  example: "gaurav.naithani@kyndryl.com"
-                subject:
-                  type: string
-                  example: "Mainframe Network Logs Anomaly Detected!"
-                message:
-                  type: string
-                  example: |
-                    Time Detected: 2025-02-25T00:00:00Z
-                    Actual Usage: 1.0
-                    Expected Usage: 0
-                    Anomaly Score: 3.5
-                    Source: 192.168.1.1
+            type: integer
+            default: 5
       responses:
         "200":
-          description: Successfully triggered Logic App.
+          description: Successfully retrieved secure scores.
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  status:
-                    type: string
-                    example: "Success"
-        "400":
-          description: Bad request.
+                  value:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Unique identifier of the secure score record.
+                        tenantId:
+                          type: string
+                          description: Tenant ID of the organization.
+                        activeUserCount:
+                          type: integer
+                          description: Number of active users in the tenant.
+                        currentScore:
+                          type: number
+                          description: The latest security score.
+                        maxScore:
+                          type: number
+                          description: The maximum possible security score.
+                        vendor:
+                          type: string
+                          description: The security vendor (e.g., Microsoft).
+                        createdDateTime:
+                          type: string
+                          format: date-time
+                          description: Timestamp of when the score was generated.
         "401":
-          description: Unauthorized.
+          description: Unauthorized - Invalid or missing access token.
+        "403":
+          description: Forbidden - Insufficient permissions.
         "500":
           description: Internal server error.
-      security:
-        - apiKeyAuth: []
 
 components:
   securitySchemes:
-    apiKeyAuth:
-      type: apiKey
-      in: query
-      name: sig
+    OAuth2Auth:
+      type: oauth2
+      description: Microsoft Graph API authentication.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://login.microsoftonline.com/common/oauth2/v2.0/authorize
+          tokenUrl: https://login.microsoftonline.com/common/oauth2/v2.0/token
+          scopes:
+            SecurityEvents.Read.All: Read security events and secure scores.
+
+security:
+  - OAuth2Auth:
+      - SecurityEvents.Read.All
